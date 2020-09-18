@@ -670,13 +670,13 @@ class PumpBolusesRequestMessage( MedtronicSendMessage ):
     def __init__( self, session ):
         MedtronicSendMessage.__init__( self, COM_D_COMMAND.BOLUSES_REQUEST, session )
 
-class PumpRemoteBolusRequestMessage( MedtronicSendMessage ):
-    def __init__( self, session, bolusID, amount, execute ):
-        unknown1 = 0 # ??
-        unknown2 = 0 # Square Wave amount?
-        unknown3 = 0 # Square Wave length?
-        payload = struct.pack( '>BBHHBH', bolusID, execute, unknown1, amount * 10000, unknown2, unknown3 )
-        MedtronicSendMessage.__init__( self, COM_D_COMMAND.REMOTE_BOLUS_REQUEST, session, payload )
+# class PumpRemoteBolusRequestMessage( MedtronicSendMessage ):
+#     def __init__( self, session, bolusID, amount, execute ):
+#         unknown1 = 0 # ??
+#         unknown2 = 0 # Square Wave amount?
+#         unknown3 = 0 # Square Wave length?
+#         payload = struct.pack( '>BBHHBH', bolusID, execute, unknown1, amount * 10000, unknown2, unknown3 )
+#         MedtronicSendMessage.__init__( self, COM_D_COMMAND.REMOTE_BOLUS_REQUEST, session, payload )
 
 class Type405RequestMessage( MedtronicSendMessage ):
     def __init__( self, session, pumpDateTime ):
@@ -1210,15 +1210,15 @@ class Medtronic600SeriesDriver( object ):
         response = BayerBinaryMessage.decode( self.readMessage() ) # Read the 0x80
         return MedtronicReceiveMessage.decode( response.payload, self.session )
 
-    def doRemoteBolus( self, bolusID, amount, execute ):
-        logger.info("# Execute Remote Bolus")
-        mtMessage = PumpRemoteBolusRequestMessage( self.session, bolusID, amount, execute )
+    # def doRemoteBolus( self, bolusID, amount, execute ):
+    #     logger.info("# Execute Remote Bolus")
+    #     mtMessage = PumpRemoteBolusRequestMessage( self.session, bolusID, amount, execute )
 
-        bayerMessage = BayerBinaryMessage( 0x12, self.session, mtMessage.encode() )
-        self.sendMessage( bayerMessage.encode() )
-        self.getBayerBinaryMessage(0x81) # Read the 0x81
-        response = BayerBinaryMessage.decode( self.readMessage() ) # Read the 0x80
-        return MedtronicReceiveMessage.decode( response.payload, self.session )
+    #     bayerMessage = BayerBinaryMessage( 0x12, self.session, mtMessage.encode() )
+    #     self.sendMessage( bayerMessage.encode() )
+    #     self.getBayerBinaryMessage(0x81) # Read the 0x81
+    #     response = BayerBinaryMessage.decode( self.readMessage() ) # Read the 0x80
+    #     return MedtronicReceiveMessage.decode( response.payload, self.session )
 
     def doRemoteSuspend( self ):
         logger.info("# Execute Remote Suspend")
